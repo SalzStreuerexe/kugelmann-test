@@ -67,8 +67,10 @@
         .ba-image img { width: 100%; height: 100%; object-fit: cover; }
         .ba-after { width: 50%; border-right: 4px solid #1a73e8; z-index: 10; }
         .ba-handle {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 48px; height: 48px; background: #1a73e8; border: 4px solid white; border-radius: 50%; z-index: 20;
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 48px; height: 48px; background: #1a73e8; border: 4px solid white; border-radius: 50%;
+            z-index: 20;
             display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
     </style>
@@ -308,14 +310,17 @@
                             </p>
                             
                             <div class="ba-slider shadow-xl mx-auto max-w-4xl" id="bath-slider">
-                                <div class="ba-image"><img src="images/bad_alt.jpg" alt="Altes Bad"></div>
-                                <div class="ba-image ba-after" id="bath-after"><img src="images/bad.jpeg" alt="Neues Bad"></div>
+                                <div class="ba-image">
+                                    <img src="images/Bad -NEU-Rechts.png" alt="Neues Bad">
+                                </div>
+                                <div class="ba-image ba-after" id="bath-after">
+                                    <img src="images/Bad -Alt-Links.png" alt="Altes Bad">
+                                </div>
                                 <div class="ba-handle" id="bath-handle"><i class="fas fa-arrows-alt-h text-xl"></i></div>
                             </div>
-                            <p class="text-xs text-gray-400 mt-4 italic">Links: Vorher | Rechts: Nachher</p>
+                            <p class="text-xs text-gray-400 mt-4 italic">Links: Vorher (Alt) | Rechts: Nachher (Neu)</p>
                         </div>
                     </div>
-
                     <div class="group rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard border border-gray-100 dark:border-gray-700">
                         <div class="grid grid-cols-1 md:grid-cols-2">
                              <div class="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
@@ -445,7 +450,7 @@
                 </div>
 
                 <div class="mt-12 rounded-3xl overflow-hidden shadow-lg h-80">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d669.104977691628!2d8.380548392901845!3d50.19411818846408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bdaff3ffe50e85%3A0xe4f29c3ac45594d5!2sReinhold%20Kugelmann%20Heizung%26Sanit%C3%A4r%20Meisterbetrieb%20Inh.%20Axel%20Bachan!5e1!3m2!1sde!2sde!4v1744298678172!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://maps.google.com/maps?q=Musterstra%C3%9Fe+123+12345+Musterstadt&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
@@ -549,7 +554,6 @@
             let pos = ((x - rect.left) / rect.width) * 100;
             // Clamp between 0 and 100
             pos = Math.max(0, Math.min(100, pos));
-            
             // Apply styles
             afterImg.style.width = pos + "%";
             handle.style.left = pos + "%";
