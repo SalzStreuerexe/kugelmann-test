@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kontaktieren Sie Reinhold Kugelmann - Ihren Experten für Heizung und Sanitär.">
+    <title>Kontakt - Reinhold Kugelmann</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <button class="openbtn" onclick="openNav()">☰</button>
+
+    <div id="sidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="index.html">Startseite</a>
+        <a href="leistungen.html">Leistungen</a>
+        <a href="ueber-uns.html">Über uns</a>
+        <a href="referenzen.html">Referenzen</a>
+        <a href="kontakt.html">Kontakt</a>
+        <hr style="border-color: #444;">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+    </div>
+
+    <div id="main-overlay" onclick="closeNav()"></div>
+
+    <header>
+        <div class="banner-container">
+            <img src="images/banner.jpg" alt="Bannerbild Kontakt" class="banner-image">
+        </div>
+        <a href="kontakt.html" class="cta-button">Jetzt Kontakt aufnehmen</a>
+    </header>
+
+    <main>
+        <section id="kontakt">
+            <h2 class="section-title">Kontaktieren Sie uns</h2>
+            <p>Wir freuen uns auf Ihre Anfrage!</p>
+
+            <div class="contact-info">
+                <h3>Unsere Kontaktdaten</h3>
+                <p><strong>Reinhold Kugelmann - Heizung & Sanitär</strong></p>
+                <p>Musterstraße 123</p>
+                <p>12345 Musterstadt</p>
+                <p>Telefon: 01234 / 567890</p>
+                <p>E-Mail: info@kugelmann-heizung.de</p>
+            </div>
+
+            <div class="contact-info">
+                <h3>Öffnungszeiten</h3>
+                <p>Montag - Donnerstag: 08:00 - 17:00 Uhr</p>
+                <p>Freitag: 08:00 - 13:00 Uhr</p>
+                <p>Samstag: Geschlossen</p>
+                <p>Sonntag: Geschlossen</p>
+            </div>
+
+            <div class="map-container">
+                <h3>Unser Standort</h3>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d669.104977691628!2d8.380548392901845!3d50.19411818846408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bdaff3ffe50e85%3A0xe4f29c3ac45594d5!2sReinhold%20Kugelmann%20Heizung%26Sanit%C3%A4r%20Meisterbetrieb%20Inh.%20Axel%20Bachan!5e1!3m2!1sde!2sde!4v1744298678172!5m2!1sde!2sde" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Reinhold Kugelmann. Alle Rechte vorbehalten. | <a href="impressum.html" style="color: white;">Impressum</a> | <a href="datenschutz.html" style="color: white;">Datenschutz</a></p>
+    </footer>
+
+    <script>
+        function openNav() {
+          document.getElementById("sidenav").style.width = "250px";
+          document.getElementById("main-overlay").style.display = "block";
+        }
+        function closeNav() {
+          document.getElementById("sidenav").style.width = "0";
+          document.getElementById("main-overlay").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
