@@ -10,19 +10,15 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Roboto', 'sans-serif'] },
                     colors: {
-                        // Google Brand Colors approximation
                         google: {
                             blue: '#1a73e8',
                             blueHover: '#1557b0',
-                            darkBg: '#202124', // Google Dark Mode Background
-                            darkCard: '#303134', // Google Dark Mode Surface
+                            darkBg: '#202124',
+                            darkCard: '#303134',
                             lightBg: '#ffffff',
-                            lightSurface: '#f8f9fa',
-                            textDark: '#e8eaed', // Google Dark Mode Text
+                            textDark: '#e8eaed',
                             textLight: '#202124',
                         }
                     }
@@ -32,489 +28,254 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
-        body { font-family: 'Roboto', sans-serif; }
-        
-        /* Smooth Transitions */
-        .page-transition { animation: fadeIn 0.3s ease-out; }
+        .ba-slider { position: relative; width: 100%; height: 400px; overflow: hidden; border-radius: 12px; cursor: col-resize; }
+        .ba-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .ba-image img { width: 100%; height: 100%; object-fit: cover; }
+        .ba-after { width: 50%; border-right: 4px solid #1a73e8; z-index: 10; }
+        .ba-handle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 44px; height: 44px; background: #1a73e8; border: 4px solid white; border-radius: 50%; z-index: 20;
+            display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .nav-section { display: none; }
+        .nav-section.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Custom Scrollbar (optional, but nice) */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #5f6368; }
-
-        /* Google-Style Active Nav State */
-        .nav-item.active {
-            background-color: #e8f0fe;
-            color: #1a73e8;
-            font-weight: 500;
-        }
-        .dark .nav-item.active {
-            background-color: #394457;
-            color: #8ab4f8;
-        }
-
-        /* Hero Image Gradient Overlay for text readability */
-        .hero-overlay {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
-        }
     </style>
 </head>
+<body class="bg-google-lightBg text-google-textLight dark:bg-google-darkBg dark:text-google-textDark transition-colors duration-300">
 
-<body class="bg-google-lightSurface dark:bg-google-darkBg text-google-textLight dark:text-google-textDark transition-colors duration-300 h-screen flex flex-col md:flex-row overflow-hidden">
-
-    <div class="md:hidden bg-white dark:bg-google-darkCard shadow-sm p-4 flex justify-between items-center z-50 sticky top-0">
-        <span class="font-bold text-xl tracking-tight">Kugelmann</span>
-        <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 focus:outline-none">
-            <i class="fas fa-bars text-2xl"></i>
-        </button>
-    </div>
-
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:flex-shrink-0 w-72 bg-white dark:bg-google-darkCard border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 z-40 flex flex-col shadow-xl md:shadow-none">
-        
-        <div class="p-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">Kugelmann</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium mt-1">Heizung & Sanitär</p>
-            </div>
-            <button onclick="toggleMobileMenu()" class="md:hidden text-gray-500">
-                <i class="fas fa-times text-xl"></i>
+    <nav class="fixed top-0 left-0 right-0 bg-white/90 dark:bg-google-darkCard/90 backdrop-blur-md shadow-sm z-50 flex items-center justify-between px-6 py-3">
+        <div class="flex items-center">
+            <button onclick="toggleSidebar(true)" class="p-2 mr-4 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
+                <i class="fas fa-bars"></i>
             </button>
+            <span class="text-xl font-medium tracking-tight">Reinhold <span class="text-google-blue font-bold">Kugelmann</span></span>
         </div>
+        <button onclick="toggleTheme()" class="p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
+            <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
+    </nav>
 
-        <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
-            <button onclick="navTo('start')" id="btn-start" class="nav-item w-full flex items-center px-4 py-3 rounded-r-full rounded-l-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-home w-6 text-center mr-3 text-lg"></i>
-                <span class="text-sm font-medium">Startseite</span>
-            </button>
-
-            <button onclick="navTo('leistungen')" id="btn-leistungen" class="nav-item w-full flex items-center px-4 py-3 rounded-r-full rounded-l-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-layer-group w-6 text-center mr-3 text-lg"></i>
-                <span class="text-sm font-medium">Leistungen</span>
-            </button>
-
-            <button onclick="navTo('referenzen')" id="btn-referenzen" class="nav-item w-full flex items-center px-4 py-3 rounded-r-full rounded-l-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-images w-6 text-center mr-3 text-lg"></i>
-                <span class="text-sm font-medium">Referenzen</span>
-            </button>
-            
-            <button onclick="navTo('ueberuns')" id="btn-ueberuns" class="nav-item w-full flex items-center px-4 py-3 rounded-r-full rounded-l-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-user-friends w-6 text-center mr-3 text-lg"></i>
-                <span class="text-sm font-medium">Über Uns</span>
-            </button>
-
-            <div class="my-4 border-t border-gray-200 dark:border-gray-700"></div>
-
-            <button onclick="navTo('kontakt')" id="btn-kontakt" class="nav-item w-full flex items-center px-4 py-3 rounded-r-full rounded-l-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-envelope w-6 text-center mr-3 text-lg"></i>
-                <span class="text-sm font-medium">Kontakt</span>
-            </button>
-            
-            <button onclick="navTo('impressum')" id="btn-impressum" class="nav-item w-full flex items-center px-4 py-3 rounded-r-full rounded-l-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-file-contract w-6 text-center mr-3 text-lg"></i>
-                <span class="text-sm font-medium">Impressum</span>
-            </button>
-        </nav>
-
-        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-             <div class="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2">
-                <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Design</span>
-                <button onclick="toggleTheme()" class="focus:outline-none text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                    <i id="theme-icon" class="fas fa-moon"></i>
-                </button>
-            </div>
-            <p class="text-xs text-center text-gray-400 mt-4">&copy; 2025 Kugelmann GmbH</p>
+    <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/40 z-[60] hidden backdrop-blur-sm"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-white dark:bg-google-darkCard z-[70] shadow-2xl transform -translate-x-full transition-transform duration-300">
+        <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center text-google-blue">
+            <span class="text-lg font-bold uppercase tracking-wider">Menü</span>
+            <button onclick="toggleSidebar(false)" class="text-gray-500 hover:text-black dark:hover:text-white"><i class="fas fa-times text-2xl"></i></button>
+        </div>
+        <div class="py-4 px-2 space-y-1">
+            <a href="javascript:void(0)" onclick="navTo('start')" class="flex items-center px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition"><i class="fas fa-home w-8"></i> Startseite</a>
+            <a href="javascript:void(0)" onclick="navTo('services')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-tools w-8"></i> Leistungen</a>
+            <a href="javascript:void(0)" onclick="navTo('references')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-images w-8"></i> Referenzen</a>
+            <a href="javascript:void(0)" onclick="navTo('about')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-user-friends w-8"></i> Über uns</a>
+            <a href="javascript:void(0)" onclick="navTo('contact')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-envelope w-8"></i> Kontakt</a>
+            <hr class="my-4 dark:border-gray-700">
+            <a href="javascript:void(0)" onclick="navTo('impressum')" class="text-sm opacity-60 px-4 py-2 block hover:underline italic">Impressum</a>
+            <a href="javascript:void(0)" onclick="navTo('datenschutz')" class="text-sm opacity-60 px-4 py-2 block hover:underline italic">Datenschutz</a>
         </div>
     </aside>
 
-    <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden glass-panel"></div>
-
-    <main id="main-scroll-container" class="flex-1 overflow-y-auto relative bg-white dark:bg-google-darkBg">
+    <main class="pt-24 px-4 max-w-6xl mx-auto pb-20">
         
-        <div id="page-start" class="page-section">
-            <div class="relative h-[500px] w-full bg-gray-900 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover opacity-80" alt="Modernes Wohnen">
-                <div class="absolute inset-0 hero-overlay flex items-center justify-center text-center px-4">
-                    <div class="max-w-3xl">
-                        <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-md">Wärme, Wasser, Wohlfühlen.</h2>
-                        <p class="text-lg md:text-xl text-gray-100 mb-8 font-light">Ihr Meisterbetrieb für moderne Heiztechnik und Traumbäder in der Region.</p>
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button onclick="navTo('kontakt')" class="px-8 py-3 bg-google-blue hover:bg-google-blueHover text-white rounded-full font-medium shadow-lg transition transform hover:-translate-y-1">
-                                Termin vereinbaren
-                            </button>
-                            <button onclick="navTo('leistungen')" class="px-8 py-3 bg-white text-gray-800 hover:bg-gray-100 rounded-full font-medium shadow-lg transition transform hover:-translate-y-1">
-                                Leistungen ansehen
-                            </button>
-                        </div>
+        <section id="start" class="nav-section active">
+            <div class="bg-gradient-to-br from-blue-700 to-blue-900 rounded-[2.5rem] p-10 mb-12 text-white relative overflow-hidden shadow-2xl">
+                <div class="relative z-10 max-w-2xl">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">Heizung & Sanitär Reinhold Kugelmann</h1>
+                    <p class="text-xl md:text-2xl opacity-90 mb-10 font-light">Ihr erfahrener Meisterbetrieb für innovative Haustechnik in Thierhaupten und Umgebung.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="navTo('contact')" class="bg-white text-blue-700 px-8 py-4 rounded-full font-bold hover:shadow-xl transition transform hover:scale-105">Jetzt anfragen</button>
+                        <button onclick="navTo('services')" class="bg-blue-600/30 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition">Unsere Leistungen</button>
                     </div>
                 </div>
+                <img src="images/banner.jpg" class="absolute right-0 top-0 h-full w-1/3 object-cover opacity-30 hidden lg:block" alt="Banner">
             </div>
+        </section>
 
-            <div class="max-w-6xl mx-auto px-6 -mt-16 relative z-10 pb-20">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white dark:bg-google-darkCard rounded-2xl shadow-lg p-6 hover:shadow-xl transition duration-300 border border-gray-100 dark:border-gray-700">
-                        <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-google-blue mb-4">
-                            <i class="fas fa-fire text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">Heizung modernisieren</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">Sparen Sie Energiekosten mit modernster Brennwerttechnik oder Wärmepumpen.</p>
-                        <a onclick="navTo('leistungen')" class="text-google-blue font-medium text-sm hover:underline cursor-pointer">Mehr erfahren &rarr;</a>
-                    </div>
-                    <div class="bg-white dark:bg-google-darkCard rounded-2xl shadow-lg p-6 hover:shadow-xl transition duration-300 border border-gray-100 dark:border-gray-700">
-                        <div class="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 mb-4">
-                            <i class="fas fa-bath text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">Bad & Wellness</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">Vom Gäste-WC bis zum Luxus-Spa. Wir planen und realisieren Ihr Traumbad.</p>
-                        <a onclick="navTo('leistungen')" class="text-google-blue font-medium text-sm hover:underline cursor-pointer">Mehr erfahren &rarr;</a>
-                    </div>
-                    <div class="bg-white dark:bg-google-darkCard rounded-2xl shadow-lg p-6 hover:shadow-xl transition duration-300 border border-gray-100 dark:border-gray-700">
-                        <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 mb-4">
-                            <i class="fas fa-tools text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">Kundendienst</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">Schnelle Hilfe bei Störungen und regelmäßige Wartung für Ihre Sicherheit.</p>
-                        <a onclick="navTo('kontakt')" class="text-google-blue font-medium text-sm hover:underline cursor-pointer">Kontakt aufnehmen &rarr;</a>
-                    </div>
-                </div>
-
-                <div class="mt-16 text-center">
-                    <h3 class="text-2xl font-bold mb-8 text-gray-800 dark:text-white">Kundenstimmen</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50">
-                            <div class="flex text-yellow-400 mb-3 justify-center text-sm">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                            </div>
-                            <p class="italic text-gray-600 dark:text-gray-300">"Hervorragende Arbeit. Die Monteure waren pünktlich, sauber und sehr freundlich. Die neue Heizung läuft perfekt."</p>
-                            <div class="mt-4 font-bold text-gray-800 dark:text-white text-sm">- Thomas M.</div>
-                        </div>
-                        <div class="p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50">
-                            <div class="flex text-yellow-400 mb-3 justify-center text-sm">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                            </div>
-                            <p class="italic text-gray-600 dark:text-gray-300">"Endlich ein Handwerker, den man erreicht. Danke für die schnelle Hilfe beim Rohrbruch!"</p>
-                            <div class="mt-4 font-bold text-gray-800 dark:text-white text-sm">- Sarah K.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="page-leistungen" class="page-section hidden">
-            <div class="h-64 md:h-80 w-full overflow-hidden relative">
-                <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover" alt="Technik">
-                <div class="absolute inset-0 bg-black/50 flex items-end p-8 md:p-12">
-                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-2">Unsere Leistungen</h2>
-                </div>
-            </div>
-
-            <div class="max-w-5xl mx-auto px-6 py-12 space-y-12">
-                <div class="flex flex-col md:flex-row gap-8 items-center">
-                    <div class="md:w-1/2">
-                         <div class="uppercase text-google-blue font-bold text-sm mb-2 tracking-wider">Wärme</div>
-                        <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Heizungstechnik</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
-                            Wir beraten Sie herstellerunabhängig zu Öl, Gas, Pellet oder Wärmepumpen. 
-                            Eine moderne Heizung senkt nicht nur Ihre Kosten, sondern schont auch die Umwelt.
-                        </p>
-                        <ul class="space-y-2 text-gray-600 dark:text-gray-400">
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> Brennwerttechnik</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> Wärmepumpen & Solarthermie</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> Fußbodenheizung</li>
+        <section id="services" class="nav-section">
+            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Unsere Leistungen</h2>
+            
+            <div class="bg-white dark:bg-google-darkCard p-8 rounded-3xl shadow-sm border dark:border-gray-700 mb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <h3 class="text-3xl font-bold mb-6 text-google-blue">Exklusive Badsanierung</h3>
+                        <p class="text-lg mb-6 opacity-80">Verwandeln Sie Ihr Badezimmer in eine moderne Wohlfühloase. Wir übernehmen die komplette Planung und Installation – barrierefrei und zeitgemäß.</p>
+                        <ul class="space-y-3 mb-8">
+                            <li><i class="fas fa-check text-google-blue mr-2"></i> Alles aus einer Hand</li>
+                            <li><i class="fas fa-check text-google-blue mr-2"></i> Barrierefreie Konzepte</li>
+                            <li><i class="fas fa-check text-google-blue mr-2"></i> Modernste Sanitär-Technik</li>
                         </ul>
                     </div>
-                    <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-lg h-64">
-                         <img src="images/vitodens.jpeg" class="w-full h-full object-cover transform hover:scale-105 transition duration-500" alt="Heizung">
-                    </div>
-                </div>
-
-                <hr class="border-gray-200 dark:border-gray-700">
-
-                <div class="flex flex-col md:flex-row-reverse gap-8 items-center">
-                    <div class="md:w-1/2">
-                        <div class="uppercase text-teal-600 font-bold text-sm mb-2 tracking-wider">Wasser</div>
-                        <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Sanitär & Bäder</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
-                            Das Bad ist heute mehr als nur ein Waschraum. Wir planen Ihr persönliches Wohlfühlbad 
-                            mit 3D-Software und koordinieren alle Gewerke.
-                        </p>
-                        <ul class="space-y-2 text-gray-600 dark:text-gray-400">
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> Barrierefreie Bäder</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> Regenduschen & Wellness</li>
-                            <li><i class="fas fa-check text-green-500 mr-2"></i> Wasseraufbereitung (Enthärtung)</li>
-                        </ul>
-                    </div>
-                    <div class="md:w-1/2 rounded-2xl overflow-hidden shadow-lg h-64">
-                         <img src="images/bad.jpeg" class="w-full h-full object-cover transform hover:scale-105 transition duration-500" alt="Bad">
+                    <div class="ba-slider shadow-2xl" id="bath-slider">
+                        <div class="ba-image"><img src="images/bad_alt.jpg" alt="Vorher"></div>
+                        <div class="ba-image ba-after" id="bath-after"><img src="images/bad.jpeg" alt="Nachher"></div>
+                        <div class="ba-handle" id="bath-handle"><i class="fas fa-arrows-alt-h text-xl"></i></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="page-referenzen" class="page-section hidden">
-            <div class="h-64 md:h-80 w-full overflow-hidden relative">
-                <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover" alt="Baustelle">
-                <div class="absolute inset-0 bg-black/50 flex items-end p-8 md:p-12">
-                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-2">Referenzen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 dark:bg-google-darkCard p-8 rounded-3xl border dark:border-gray-700">
+                    <i class="fas fa-fire text-orange-500 text-4xl mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">Innovative Heizlösungen</h3>
+                    <p class="opacity-70 mb-6">Nachhaltige und effiziente Heizsysteme für Ihr Zuhause:</p>
+                    <ul class="grid grid-cols-2 gap-2 text-sm font-medium opacity-90">
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Wärmepumpen</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Solarthermie</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Gas/Öl-Systeme</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Pelletheizungen</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Hybridlösungen</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Smart Home</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-50 dark:bg-google-darkCard p-8 rounded-3xl border dark:border-gray-700">
+                    <i class="fas fa-wrench text-blue-500 text-4xl mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4">Wartung & Reparatur</h3>
+                    <p class="opacity-70 mb-6">Wir sorgen dafür, dass alles reibungslos läuft:</p>
+                    <ul class="grid grid-cols-1 gap-2 text-sm font-medium opacity-90">
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Regelmäßige Heizungswartung</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Schneller Notfallservice bei Defekten</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Leckageortung & Rohrinspektion</li>
+                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Reparatur von Armaturen</li>
+                    </ul>
                 </div>
             </div>
-            
-            <div class="max-w-6xl mx-auto px-6 py-12">
-                <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
-                    Qualität spricht für sich. Hier sehen Sie eine Auswahl unserer Projekte aus den Bereichen Neubau, Sanierung und Kundendienst.
-                </p>
+        </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard">
-                        <div class="relative overflow-hidden h-56">
-                            <img src="images/vitodens.jpeg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="Projekt 1">
-                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-4 w-full">
-                                <span class="text-white text-xs font-bold uppercase tracking-wide bg-blue-600 px-2 py-1 rounded">Heizung</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Kesseltausch MFH</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">Austausch einer alten Ölheizung gegen moderne Gas-Brennwerttechnik von Viessmann inkl. hydraulischem Abgleich.</p>
-                        </div>
+        <section id="about" class="nav-section">
+            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Über Reinhold Kugelmann</h2>
+            <div class="flex flex-col lg:flex-row gap-16 items-center">
+                <div class="w-full lg:w-1/2 relative">
+                    <img src="images/team.jpg" class="rounded-[2rem] shadow-2xl border-8 border-white dark:border-google-darkCard" alt="Team">
+                    <div class="absolute -bottom-6 -right-6 bg-google-blue text-white p-6 rounded-2xl shadow-xl hidden md:block">
+                        <p class="text-2xl font-bold">Meisterbetrieb</p>
+                        <p class="opacity-80">Qualität seit Jahren</p>
                     </div>
-
-                    <div class="group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard">
-                        <div class="relative overflow-hidden h-56">
-                            <img src="images/bad.jpeg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="Projekt 2">
-                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-4 w-full">
-                                <span class="text-white text-xs font-bold uppercase tracking-wide bg-teal-600 px-2 py-1 rounded">Bad</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Komplettbad Sanierung</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">Umbau zum barrierefreien Bad mit ebenerdiger Dusche, Großformatfliesen und hochwertigen Armaturen.</p>
-                        </div>
-                    </div>
-
-                     <div class="group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard">
-                        <div class="relative overflow-hidden h-56">
-                            <img src="images/referenz3.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="Projekt 3">
-                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-4 w-full">
-                                <span class="text-white text-xs font-bold uppercase tracking-wide bg-orange-600 px-2 py-1 rounded">Wartung</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Großanlage Wohnpark</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">Jährliche Wartung der Heizzentrale für 40 Wohneinheiten und Überprüfung der Trinkwasserhygiene.</p>
-                        </div>
+                </div>
+                <div class="w-full lg:w-1/2 space-y-6 text-lg leading-relaxed opacity-90">
+                    <p class="font-bold text-google-blue text-2xl uppercase tracking-tighter">Tradition trifft Innovation</p>
+                    <p>Hier schlägt das Herz des Handwerks. Als Ihr Partner für Heizung und Sanitär stehen wir für Werte, die heute wichtiger denn je sind: Zuverlässigkeit, Sauberkeit und echte Fachkompetenz.</p>
+                    <p>Unser Team besteht aus qualifizierten Fachkräften, die mit Leidenschaft an modernen und nachhaltigen Lösungen arbeiten. Wir begleiten Sie von der ersten Planung bis zur fertigen Installation und darüber hinaus.</p>
+                    <div class="pt-6 grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-center"><p class="font-bold text-2xl">100%</p><p class="text-xs opacity-60">Service</p></div>
+                        <div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-center"><p class="font-bold text-2xl">Regional</p><p class="text-xs opacity-60">Thierhaupten</p></div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="page-ueberuns" class="page-section hidden">
-             <div class="h-64 md:h-80 w-full overflow-hidden relative">
-                <img src="images/team.jpg" class="w-full h-full object-cover" alt="Team" style="object-position: top;">
-                <div class="absolute inset-0 bg-black/50 flex items-end p-8 md:p-12">
-                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-2">Das Team</h2>
+        <section id="references" class="nav-section">
+            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Referenzprojekte</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden rounded-3xl shadow-lg mb-4 h-64 border dark:border-gray-700">
+                        <img src="images/vitodens.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Referenz 1">
+                    </div>
+                    <h4 class="font-bold text-lg mb-1">Gas-Brennwerttechnik</h4>
+                    <p class="text-sm opacity-60">Wandhängendes Gasgerät Viessmann Vitodens</p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden rounded-3xl shadow-lg mb-4 h-64 border dark:border-gray-700">
+                        <img src="images/bad.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Referenz 2">
+                    </div>
+                    <h4 class="font-bold text-lg mb-1">Bad-Sanierung</h4>
+                    <p class="text-sm opacity-60">Barrierefreier Umbau zum Wohlfühlbad</p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden rounded-3xl shadow-lg mb-4 h-64 border dark:border-gray-700">
+                        <img src="images/referenz3.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Referenz 3">
+                    </div>
+                    <h4 class="font-bold text-lg mb-1">Solar-Anlage</h4>
+                    <p class="text-sm opacity-60">Solarthermie für Warmwasserbereitung</p>
                 </div>
             </div>
-            
-            <div class="max-w-4xl mx-auto px-6 py-12">
-                 <div class="bg-white dark:bg-google-darkCard p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
-                    <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Tradition trifft Moderne</h3>
-                    <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                        Als Familienunternehmen in zweiter Generation verbinden wir traditionelles Handwerk mit modernster Technik. 
-                        Reinhold Kugelmann gründete den Betrieb mit dem Ziel, nicht nur Heizungen zu bauen, sondern Lösungen zu schaffen.
-                    </p>
-                    <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-                        Unser Team besteht aus erfahrenen Meistern, gut ausgebildeten Gesellen und motivierten Auszubildenden. 
-                        Wir legen größten Wert auf Sauberkeit, Pünktlichkeit und ehrliche Beratung.
-                    </p>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-gray-100 dark:border-gray-700">
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-google-blue mb-1">25+</div>
-                            <div class="text-xs text-gray-500 uppercase">Jahre Erfahrung</div>
+        </section>
+
+        <section id="contact" class="nav-section">
+            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Kontakt & Öffnungszeiten</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div class="bg-blue-50 dark:bg-blue-900/10 p-10 rounded-[2rem] border-2 border-blue-100 dark:border-blue-900/30">
+                        <h3 class="text-2xl font-bold mb-6 text-google-blue">Unsere Zeiten</h3>
+                        <div class="space-y-4 text-lg">
+                            <div class="flex justify-between border-b dark:border-gray-700 pb-2"><span>Mo - Do</span><span class="font-bold">08:00 - 17:00</span></div>
+                            <div class="flex justify-between border-b dark:border-gray-700 pb-2"><span>Freitag</span><span class="font-bold">08:00 - 13:00</span></div>
+                            <div class="flex justify-between text-red-500"><span>Sa & So</span><span class="font-bold italic">Geschlossen</span></div>
                         </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-google-blue mb-1">500+</div>
-                            <div class="text-xs text-gray-500 uppercase">Projekte</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-google-blue mb-1">24/7</div>
-                            <div class="text-xs text-gray-500 uppercase">Notdienst</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-google-blue mb-1">100%</div>
-                            <div class="text-xs text-gray-500 uppercase">Zufriedenheit</div>
+                        <div class="mt-10 pt-6 border-t dark:border-gray-700">
+                            <p class="text-xl font-bold">Reinhold Kugelmann</p>
+                            <p class="opacity-80">Meisterbetrieb für Heizung & Sanitär</p>
                         </div>
                     </div>
-                 </div>
-            </div>
-        </div>
-
-        <div id="page-kontakt" class="page-section hidden">
-            <div class="max-w-5xl mx-auto px-6 py-12">
-                <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Kontaktieren Sie uns</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-google-blue text-white p-8 rounded-3xl shadow-xl flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-2xl font-bold mb-6">Wir sind für Sie da.</h3>
-                            <div class="space-y-6">
-                                <div class="flex items-start">
-                                    <i class="fas fa-map-marker-alt mt-1 mr-4 text-xl opacity-80"></i>
-                                    <div>
-                                        <p class="font-bold">Reinhold Kugelmann GmbH</p>
-                                        <p class="opacity-90">Musterstraße 123</p>
-                                        <p class="opacity-90">12345 Musterstadt</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-phone-alt mr-4 text-xl opacity-80"></i>
-                                    <a href="tel:01234567890" class="text-xl font-bold hover:text-gray-200 transition">01234 / 567890</a>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-envelope mr-4 text-xl opacity-80"></i>
-                                    <a href="mailto:info@kugelmann.de" class="hover:text-gray-200 transition">info@kugelmann.de</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8 pt-8 border-t border-white/20">
-                            <h4 class="font-bold mb-2">Öffnungszeiten</h4>
-                            <div class="flex justify-between text-sm opacity-90 mb-1"><span>Mo - Do:</span> <span>08:00 - 17:00</span></div>
-                            <div class="flex justify-between text-sm opacity-90 mb-1"><span>Freitag:</span> <span>08:00 - 13:00</span></div>
-                            <div class="flex justify-between text-sm font-bold mt-2"><span>Notdienst:</span> <span>24 Stunden</span></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-google-darkCard p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700">
-                        <form class="space-y-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Vorname</label>
-                                    <input type="text" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-google-blue dark:text-white transition" placeholder="Max">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Nachname</label>
-                                    <input type="text" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-google-blue dark:text-white transition" placeholder="Mustermann">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Email Adresse</label>
-                                <input type="email" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-google-blue dark:text-white transition" placeholder="max@beispiel.de">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">Nachricht</label>
-                                <textarea rows="4" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-google-blue dark:text-white transition" placeholder="Wie können wir Ihnen helfen?"></textarea>
-                            </div>
-                            <button type="button" class="w-full bg-google-blue hover:bg-google-blueHover text-white font-bold py-4 rounded-xl shadow-md transition transform hover:scale-[1.02]">
-                                Nachricht absenden
-                            </button>
-                        </form>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <a href="tel:+49123456789" class="p-6 bg-white dark:bg-google-darkCard rounded-2xl border dark:border-gray-700 hover:shadow-lg transition"><i class="fas fa-phone text-google-blue text-2xl mb-2"></i><p class="text-xs uppercase font-bold">Anrufen</p></a>
+                        <a href="mailto:info@kugelmann.de" class="p-6 bg-white dark:bg-google-darkCard rounded-2xl border dark:border-gray-700 hover:shadow-lg transition"><i class="fas fa-envelope text-google-blue text-2xl mb-2"></i><p class="text-xs uppercase font-bold">E-Mail</p></a>
                     </div>
                 </div>
-
-                <div class="mt-12 rounded-3xl overflow-hidden shadow-lg h-80">
+                <div class="rounded-[2rem] overflow-hidden shadow-2xl border dark:border-gray-700 h-full min-h-[400px]">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d669.104977691628!2d8.380548392901845!3d50.19411818846408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bdaff3ffe50e85%3A0xe4f29c3ac45594d5!2sReinhold%20Kugelmann%20Heizung%26Sanit%C3%A4r%20Meisterbetrieb%20Inh.%20Axel%20Bachan!5e1!3m2!1sde!2sde!4v1744298678172!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="page-impressum" class="page-section hidden">
-            <div class="max-w-4xl mx-auto px-6 py-12">
-                <div class="bg-white dark:bg-google-darkCard p-8 md:p-12 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Impressum</h2>
-                    <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400">
-                        <p><strong>Reinhold Kugelmann GmbH</strong><br>Musterstraße 123<br>12345 Musterstadt</p>
-                        <p><strong>Kontakt:</strong><br>Telefon: 0123-456789<br>E-Mail: info@reinhold-kugelmann.de</p>
-                        <p><strong>Registereintrag:</strong><br>Eintragung im Handelsregister.<br>Registergericht: Amtsgericht Musterstadt<br>Registernummer: HRB 12345</p>
-                        <p><strong>Umsatzsteuer-ID:</strong><br>Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz: DE123456789</p>
-                        
-                        <h3 class="text-xl font-bold mt-8 mb-4 text-gray-800 dark:text-white">Datenschutzerklärung</h3>
-                        <p>Der Schutz Ihrer Daten ist uns wichtig. Wir erheben nur Daten, die technisch notwendig sind (Server-Logfiles) oder die Sie uns freiwillig per Kontaktformular übermitteln.</p>
-                    </div>
-                </div>
+        <section id="impressum" class="nav-section">
+            <h2 class="text-3xl font-bold mb-8">Impressum</h2>
+            <div class="bg-white dark:bg-google-darkCard p-10 rounded-3xl border dark:border-gray-700 opacity-80 space-y-4">
+                <p class="font-bold">Reinhold Kugelmann GmbH</p>
+                <p>Musterstraße 123<br>86672 Thierhaupten</p>
+                <p>Tel: +49 (0) 123 456789<br>E-Mail: info@reinhold-kugelmann.de</p>
+                <p class="pt-4 italic">Registergericht: Amtsgericht Augsburg<br>Geschäftsführer: Reinhold Kugelmann</p>
             </div>
-        </div>
+        </section>
+
+        <section id="datenschutz" class="nav-section">
+            <h2 class="text-3xl font-bold mb-8">Datenschutz</h2>
+            <div class="bg-white dark:bg-google-darkCard p-10 rounded-3xl border dark:border-gray-700 opacity-80 text-sm space-y-4 max-h-[500px] overflow-y-auto">
+                <p>Ihre Daten sind bei uns sicher. Wir verwenden personenbezogene Daten nur zur Bearbeitung Ihrer Anfragen.</p>
+                <p>Detaillierte Informationen finden Sie in der vollständigen Datenschutzerklärung gemäß DSGVO...</p>
+            </div>
+        </section>
 
     </main>
 
+    <footer class="py-10 border-t dark:border-gray-700 text-center opacity-40 text-sm">
+        <p>© 2026 Reinhold Kugelmann. Alle Rechte vorbehalten.</p>
+    </footer>
+
     <script>
-        // --- NAVIGATION LOGIC ---
-        function navTo(pageId) {
-            // 1. Hide all pages
-            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('page-transition'));
-
-            // 2. Show target page with animation
-            const target = document.getElementById('page-' + pageId);
-            if(target) {
-                target.classList.remove('hidden');
-                target.classList.add('page-transition');
-            }
-
-            // 3. Update Sidebar Active State
-            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById('btn-' + pageId);
-            if(activeBtn) activeBtn.classList.add('active');
-
-            // 4. Mobile: Close sidebar after click
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobile-overlay');
-            if(!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
-                toggleMobileMenu();
-            }
-
-            // 5. Scroll to top
-            document.getElementById('main-scroll-container').scrollTop = 0;
+        // NAVIGATION
+        function navTo(id) {
+            document.querySelectorAll('.nav-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            toggleSidebar(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // --- MOBILE MENU TOGGLE ---
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobile-overlay');
-            
-            if (sidebar.classList.contains('-translate-x-full')) {
-                // Open
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                // Close
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-            }
+        function toggleSidebar(s) {
+            const side = document.getElementById('sidebar'), over = document.getElementById('sidebar-overlay');
+            if(s) { side.classList.remove('-translate-x-full'); over.classList.remove('hidden'); }
+            else { side.classList.add('-translate-x-full'); over.classList.add('hidden'); }
         }
-
-        // --- THEME LOGIC ---
         function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
+            const h = document.documentElement, i = document.getElementById('theme-icon');
+            if(h.classList.contains('dark')) { h.classList.remove('dark'); i.classList.replace('fa-sun','fa-moon'); }
+            else { h.classList.add('dark'); i.classList.replace('fa-moon','fa-sun'); }
         }
 
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check Theme Preference
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon').classList.add('fa-sun');
-                document.getElementById('theme-icon').classList.remove('fa-moon');
-            }
-            // Start at Home
-            navTo('start');
-        });
+        // SLIDER LOGIC
+        const slider = document.getElementById('bath-slider'), after = document.getElementById('bath-after'), handle = document.getElementById('bath-handle');
+        let active = false;
+        const slideMove = (e) => {
+            if (!active) return;
+            let x = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+            let r = slider.getBoundingClientRect();
+            let p = Math.max(0, Math.min(100, ((x - r.left) / r.width) * 100));
+            after.style.width = p + "%"; handle.style.left = p + "%";
+        };
+        slider.addEventListener('mousedown', () => active = true);
+        window.addEventListener('mouseup', () => active = false);
+        window.addEventListener('mousemove', slideMove);
+        slider.addEventListener('touchstart', () => active = true);
+        window.addEventListener('touchend', () => active = false);
+        window.addEventListener('touchmove', slideMove);
     </script>
 </body>
 </html>
