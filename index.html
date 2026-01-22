@@ -20,6 +20,7 @@
                             lightBg: '#ffffff',
                             textDark: '#e8eaed',
                             textLight: '#202124',
+                            gray: '#5f6368'
                         }
                     }
                 }
@@ -29,220 +30,200 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .ba-slider { position: relative; width: 100%; height: 400px; overflow: hidden; border-radius: 12px; cursor: col-resize; }
+        /* Slider CSS - unverändert */
+        .ba-slider { position: relative; width: 100%; height: 350px; overflow: hidden; border-radius: 8px; cursor: col-resize; }
         .ba-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .ba-image img { width: 100%; height: 100%; object-fit: cover; }
-        .ba-after { width: 50%; border-right: 4px solid #1a73e8; z-index: 10; }
+        .ba-after { width: 50%; border-right: 3px solid #1a73e8; z-index: 10; }
         .ba-handle {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 44px; height: 44px; background: #1a73e8; border: 4px solid white; border-radius: 50%; z-index: 20;
-            display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            width: 40px; height: 40px; background: #1a73e8; border: 3px solid white; border-radius: 50%; z-index: 20;
+            display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
+        /* Navigation Animation */
         .nav-section { display: none; }
-        .nav-section.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-section.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-google-lightBg text-google-textLight dark:bg-google-darkBg dark:text-google-textDark transition-colors duration-300">
+<body class="bg-google-lightBg text-google-textLight dark:bg-google-darkBg dark:text-google-textDark transition-colors duration-200 font-sans">
 
-    <nav class="fixed top-0 left-0 right-0 bg-white/90 dark:bg-google-darkCard/90 backdrop-blur-md shadow-sm z-50 flex items-center justify-between px-6 py-3">
+    <nav class="fixed top-0 left-0 right-0 bg-white dark:bg-google-darkCard shadow-sm z-50 flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
         <div class="flex items-center">
-            <button onclick="toggleSidebar(true)" class="p-2 mr-4 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
-                <i class="fas fa-bars"></i>
+            <button onclick="toggleSidebar(true)" class="p-2 mr-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition text-google-gray dark:text-google-textDark">
+                <i class="fas fa-bars text-xl"></i>
             </button>
-            <span class="text-xl font-medium tracking-tight">Reinhold <span class="text-google-blue font-bold">Kugelmann</span></span>
+            <span class="text-xl text-google-gray dark:text-google-textDark">Reinhold <span class="text-google-blue font-medium">Kugelmann</span></span>
         </div>
-        <button onclick="toggleTheme()" class="p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
-            <i id="theme-icon" class="fas fa-moon"></i>
+        <button onclick="toggleTheme()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition text-google-gray dark:text-google-textDark">
+            <i id="theme-icon" class="fas fa-moon text-lg"></i>
         </button>
     </nav>
 
-    <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/40 z-[60] hidden backdrop-blur-sm"></div>
-    <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-white dark:bg-google-darkCard z-[70] shadow-2xl transform -translate-x-full transition-transform duration-300">
-        <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center text-google-blue">
-            <span class="text-lg font-bold uppercase tracking-wider">Menü</span>
-            <button onclick="toggleSidebar(false)" class="text-gray-500 hover:text-black dark:hover:text-white"><i class="fas fa-times text-2xl"></i></button>
+    <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/50 z-[60] hidden"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-white dark:bg-google-darkCard z-[70] shadow-xl transform -translate-x-full transition-transform duration-300">
+        <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+            <span class="text-lg font-medium text-google-blue">Menü</span>
+            <button onclick="toggleSidebar(false)" class="text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full"><i class="fas fa-times"></i></button>
         </div>
-        <div class="py-4 px-2 space-y-1">
-            <a href="javascript:void(0)" onclick="navTo('start')" class="flex items-center px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition"><i class="fas fa-home w-8"></i> Startseite</a>
-            <a href="javascript:void(0)" onclick="navTo('services')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-tools w-8"></i> Leistungen</a>
-            <a href="javascript:void(0)" onclick="navTo('references')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-images w-8"></i> Referenzen</a>
-            <a href="javascript:void(0)" onclick="navTo('about')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-user-friends w-8"></i> Über uns</a>
-            <a href="javascript:void(0)" onclick="navTo('contact')" class="flex items-center px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"><i class="fas fa-envelope w-8"></i> Kontakt</a>
-            <hr class="my-4 dark:border-gray-700">
-            <a href="javascript:void(0)" onclick="navTo('impressum')" class="text-sm opacity-60 px-4 py-2 block hover:underline italic">Impressum</a>
-            <a href="javascript:void(0)" onclick="navTo('datenschutz')" class="text-sm opacity-60 px-4 py-2 block hover:underline italic">Datenschutz</a>
+        <div class="py-2">
+            <a href="javascript:void(0)" onclick="navTo('start')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm font-medium transition"><i class="fas fa-home w-8 text-google-gray"></i> Startseite</a>
+            <a href="javascript:void(0)" onclick="navTo('services')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm font-medium transition"><i class="fas fa-tools w-8 text-google-gray"></i> Leistungen</a>
+            <a href="javascript:void(0)" onclick="navTo('references')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm font-medium transition"><i class="fas fa-images w-8 text-google-gray"></i> Referenzen</a>
+            <a href="javascript:void(0)" onclick="navTo('about')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm font-medium transition"><i class="fas fa-user-friends w-8 text-google-gray"></i> Über uns</a>
+            <a href="javascript:void(0)" onclick="navTo('contact')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm font-medium transition"><i class="fas fa-envelope w-8 text-google-gray"></i> Kontakt</a>
+            <div class="border-t my-2 dark:border-gray-700"></div>
+            <a href="javascript:void(0)" onclick="navTo('impressum')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm transition text-gray-500">Impressum</a>
+            <a href="javascript:void(0)" onclick="navTo('datenschutz')" class="flex items-center px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 text-sm transition text-gray-500">Datenschutz</a>
         </div>
     </aside>
 
-    <main class="pt-24 px-4 max-w-6xl mx-auto pb-20">
+    <main class="pt-20 px-4 max-w-4xl mx-auto pb-10">
         
         <section id="start" class="nav-section active">
-            <div class="bg-gradient-to-br from-blue-700 to-blue-900 rounded-[2.5rem] p-10 mb-12 text-white relative overflow-hidden shadow-2xl">
-                <div class="relative z-10 max-w-2xl">
-                    <h1 class="text-4xl md:text-6xl font-bold mb-6">Heizung & Sanitär Reinhold Kugelmann</h1>
-                    <p class="text-xl md:text-2xl opacity-90 mb-10 font-light">Ihr erfahrener Meisterbetrieb für innovative Haustechnik in Thierhaupten und Umgebung.</p>
-                    <div class="flex flex-wrap gap-4">
-                        <button onclick="navTo('contact')" class="bg-white text-blue-700 px-8 py-4 rounded-full font-bold hover:shadow-xl transition transform hover:scale-105">Jetzt anfragen</button>
-                        <button onclick="navTo('services')" class="bg-blue-600/30 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition">Unsere Leistungen</button>
+            <div class="rounded-lg overflow-hidden mb-6 relative h-64 md:h-80">
+                <img src="images/banner.jpg" class="w-full h-full object-cover" alt="Banner">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div class="text-center text-white px-4">
+                        <h1 class="text-3xl md:text-5xl font-normal mb-4">Meisterbetrieb Kugelmann</h1>
+                        <p class="text-lg opacity-90 font-light">Heizung & Sanitär in Thierhaupten</p>
                     </div>
                 </div>
-                <img src="images/banner.jpg" class="absolute right-0 top-0 h-full w-1/3 object-cover opacity-30 hidden lg:block" alt="Banner">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-6 border rounded-lg dark:border-gray-700 hover:shadow-md transition bg-white dark:bg-google-darkCard">
+                    <h2 class="text-xl font-normal text-google-blue mb-2">Warum wir?</h2>
+                    <ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300">
+                        <li>• Langjährige Erfahrung</li>
+                        <li>• Fokus auf nachhaltige Heizsysteme</li>
+                        <li>• Schneller Notdienst</li>
+                    </ul>
+                </div>
+                <div class="p-6 border rounded-lg dark:border-gray-700 hover:shadow-md transition bg-white dark:bg-google-darkCard flex flex-col justify-center items-center">
+                    <div class="text-3xl font-normal text-google-blue">100%</div>
+                    <div class="text-xs uppercase tracking-wider text-gray-500">Kundenzufriedenheit</div>
+                </div>
             </div>
         </section>
 
         <section id="services" class="nav-section">
-            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Unsere Leistungen</h2>
+            <h2 class="text-2xl font-normal mb-6 text-google-gray dark:text-gray-300">Unsere Leistungen</h2>
             
-            <div class="bg-white dark:bg-google-darkCard p-8 rounded-3xl shadow-sm border dark:border-gray-700 mb-12">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                    <div>
-                        <h3 class="text-3xl font-bold mb-6 text-google-blue">Exklusive Badsanierung</h3>
-                        <p class="text-lg mb-6 opacity-80">Verwandeln Sie Ihr Badezimmer in eine moderne Wohlfühloase. Wir übernehmen die komplette Planung und Installation – barrierefrei und zeitgemäß.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li><i class="fas fa-check text-google-blue mr-2"></i> Alles aus einer Hand</li>
-                            <li><i class="fas fa-check text-google-blue mr-2"></i> Barrierefreie Konzepte</li>
-                            <li><i class="fas fa-check text-google-blue mr-2"></i> Modernste Sanitär-Technik</li>
-                        </ul>
-                    </div>
-                    <div class="ba-slider shadow-2xl" id="bath-slider">
+            <div class="mb-8 border rounded-lg overflow-hidden dark:border-gray-700 bg-white dark:bg-google-darkCard">
+                <div class="p-4 border-b dark:border-gray-700">
+                    <h3 class="text-lg font-medium">Badsanierung (Vorher/Nachher)</h3>
+                </div>
+                <div class="p-4">
+                    <div class="ba-slider" id="bath-slider">
                         <div class="ba-image"><img src="images/bad_alt.jpg" alt="Vorher"></div>
                         <div class="ba-image ba-after" id="bath-after"><img src="images/bad.jpeg" alt="Nachher"></div>
-                        <div class="ba-handle" id="bath-handle"><i class="fas fa-arrows-alt-h text-xl"></i></div>
+                        <div class="ba-handle" id="bath-handle"><i class="fas fa-arrows-alt-h text-sm"></i></div>
                     </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-3">Schieben Sie den Regler, um den Unterschied zu sehen.</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-gray-50 dark:bg-google-darkCard p-8 rounded-3xl border dark:border-gray-700">
-                    <i class="fas fa-fire text-orange-500 text-4xl mb-6"></i>
-                    <h3 class="text-2xl font-bold mb-4">Innovative Heizlösungen</h3>
-                    <p class="opacity-70 mb-6">Nachhaltige und effiziente Heizsysteme für Ihr Zuhause:</p>
-                    <ul class="grid grid-cols-2 gap-2 text-sm font-medium opacity-90">
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Wärmepumpen</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Solarthermie</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Gas/Öl-Systeme</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Pelletheizungen</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Hybridlösungen</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Smart Home</li>
+            <div class="space-y-4">
+                <div class="p-5 border rounded-lg dark:border-gray-700 bg-white dark:bg-google-darkCard">
+                    <h3 class="text-lg font-medium text-google-blue mb-2">Heizlösungen</h3>
+                    <ul class="text-sm space-y-1 text-gray-600 dark:text-gray-300">
+                        <li>• Wärmepumpen & Solarthermie</li>
+                        <li>• Gas-Brennwerttechnik & Öl-Systeme</li>
+                        <li>• Pelletheizungen</li>
+                        <li>• Smart Home Integration</li>
                     </ul>
                 </div>
-                <div class="bg-gray-50 dark:bg-google-darkCard p-8 rounded-3xl border dark:border-gray-700">
-                    <i class="fas fa-wrench text-blue-500 text-4xl mb-6"></i>
-                    <h3 class="text-2xl font-bold mb-4">Wartung & Reparatur</h3>
-                    <p class="opacity-70 mb-6">Wir sorgen dafür, dass alles reibungslos läuft:</p>
-                    <ul class="grid grid-cols-1 gap-2 text-sm font-medium opacity-90">
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Regelmäßige Heizungswartung</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Schneller Notfallservice bei Defekten</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Leckageortung & Rohrinspektion</li>
-                        <li><i class="fas fa-caret-right text-blue-500 mr-2"></i> Reparatur von Armaturen</li>
+                <div class="p-5 border rounded-lg dark:border-gray-700 bg-white dark:bg-google-darkCard">
+                    <h3 class="text-lg font-medium text-google-blue mb-2">Wartung & Sanitär</h3>
+                    <ul class="text-sm space-y-1 text-gray-600 dark:text-gray-300">
+                        <li>• Regelmäßige Wartung</li>
+                        <li>• Rohrbruch-Notdienst & Leckageortung</li>
+                        <li>• Armaturen-Austausch</li>
                     </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="nav-section">
-            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Über Reinhold Kugelmann</h2>
-            <div class="flex flex-col lg:flex-row gap-16 items-center">
-                <div class="w-full lg:w-1/2 relative">
-                    <img src="images/team.jpg" class="rounded-[2rem] shadow-2xl border-8 border-white dark:border-google-darkCard" alt="Team">
-                    <div class="absolute -bottom-6 -right-6 bg-google-blue text-white p-6 rounded-2xl shadow-xl hidden md:block">
-                        <p class="text-2xl font-bold">Meisterbetrieb</p>
-                        <p class="opacity-80">Qualität seit Jahren</p>
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/2 space-y-6 text-lg leading-relaxed opacity-90">
-                    <p class="font-bold text-google-blue text-2xl uppercase tracking-tighter">Tradition trifft Innovation</p>
-                    <p>Hier schlägt das Herz des Handwerks. Als Ihr Partner für Heizung und Sanitär stehen wir für Werte, die heute wichtiger denn je sind: Zuverlässigkeit, Sauberkeit und echte Fachkompetenz.</p>
-                    <p>Unser Team besteht aus qualifizierten Fachkräften, die mit Leidenschaft an modernen und nachhaltigen Lösungen arbeiten. Wir begleiten Sie von der ersten Planung bis zur fertigen Installation und darüber hinaus.</p>
-                    <div class="pt-6 grid grid-cols-2 gap-4">
-                        <div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-center"><p class="font-bold text-2xl">100%</p><p class="text-xs opacity-60">Service</p></div>
-                        <div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-center"><p class="font-bold text-2xl">Regional</p><p class="text-xs opacity-60">Thierhaupten</p></div>
-                    </div>
                 </div>
             </div>
         </section>
 
         <section id="references" class="nav-section">
-            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Referenzprojekte</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-3xl shadow-lg mb-4 h-64 border dark:border-gray-700">
-                        <img src="images/vitodens.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Referenz 1">
+            <h2 class="text-2xl font-normal mb-6 text-google-gray dark:text-gray-300">Referenzen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="border rounded-lg overflow-hidden dark:border-gray-700 bg-white dark:bg-google-darkCard">
+                    <img src="images/vitodens.jpeg" class="w-full h-48 object-cover" alt="Heizung">
+                    <div class="p-4">
+                        <p class="font-medium text-sm">Viessmann Vitodens</p>
+                        <p class="text-xs text-gray-500">Installation Gas-Brennwert</p>
                     </div>
-                    <h4 class="font-bold text-lg mb-1">Gas-Brennwerttechnik</h4>
-                    <p class="text-sm opacity-60">Wandhängendes Gasgerät Viessmann Vitodens</p>
                 </div>
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-3xl shadow-lg mb-4 h-64 border dark:border-gray-700">
-                        <img src="images/bad.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Referenz 2">
+                <div class="border rounded-lg overflow-hidden dark:border-gray-700 bg-white dark:bg-google-darkCard">
+                    <img src="images/bad.jpeg" class="w-full h-48 object-cover" alt="Bad">
+                    <div class="p-4">
+                        <p class="font-medium text-sm">Komfort-Bad</p>
+                        <p class="text-xs text-gray-500">Komplettsanierung</p>
                     </div>
-                    <h4 class="font-bold text-lg mb-1">Bad-Sanierung</h4>
-                    <p class="text-sm opacity-60">Barrierefreier Umbau zum Wohlfühlbad</p>
                 </div>
-                <div class="group cursor-pointer">
-                    <div class="overflow-hidden rounded-3xl shadow-lg mb-4 h-64 border dark:border-gray-700">
-                        <img src="images/referenz3.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Referenz 3">
+                 <div class="border rounded-lg overflow-hidden dark:border-gray-700 bg-white dark:bg-google-darkCard">
+                    <img src="images/referenz3.jpg" class="w-full h-48 object-cover" alt="Solar">
+                    <div class="p-4">
+                        <p class="font-medium text-sm">Solarthermie</p>
+                        <p class="text-xs text-gray-500">Warmwasseraufbereitung</p>
                     </div>
-                    <h4 class="font-bold text-lg mb-1">Solar-Anlage</h4>
-                    <p class="text-sm opacity-60">Solarthermie für Warmwasserbereitung</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="nav-section">
+            <h2 class="text-2xl font-normal mb-6 text-google-gray dark:text-gray-300">Über uns</h2>
+            <div class="bg-white dark:bg-google-darkCard border rounded-lg p-6 dark:border-gray-700">
+                <img src="images/team.jpg" class="w-full rounded mb-6" alt="Team">
+                <div class="space-y-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    <p>Hier schlägt das Herz des Handwerks. Als Ihr Partner für Heizung und Sanitär stehen wir für Werte, die heute wichtiger denn je sind: Zuverlässigkeit, Sauberkeit und echte Fachkompetenz.</p>
+                    <p>Unser Team besteht aus qualifizierten Fachkräften, die mit Leidenschaft an modernen und nachhaltigen Lösungen arbeiten.</p>
                 </div>
             </div>
         </section>
 
         <section id="contact" class="nav-section">
-            <h2 class="text-3xl font-bold mb-10 border-l-8 border-google-blue pl-4">Kontakt & Öffnungszeiten</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="space-y-8">
-                    <div class="bg-blue-50 dark:bg-blue-900/10 p-10 rounded-[2rem] border-2 border-blue-100 dark:border-blue-900/30">
-                        <h3 class="text-2xl font-bold mb-6 text-google-blue">Unsere Zeiten</h3>
-                        <div class="space-y-4 text-lg">
-                            <div class="flex justify-between border-b dark:border-gray-700 pb-2"><span>Mo - Do</span><span class="font-bold">08:00 - 17:00</span></div>
-                            <div class="flex justify-between border-b dark:border-gray-700 pb-2"><span>Freitag</span><span class="font-bold">08:00 - 13:00</span></div>
-                            <div class="flex justify-between text-red-500"><span>Sa & So</span><span class="font-bold italic">Geschlossen</span></div>
-                        </div>
-                        <div class="mt-10 pt-6 border-t dark:border-gray-700">
-                            <p class="text-xl font-bold">Reinhold Kugelmann</p>
-                            <p class="opacity-80">Meisterbetrieb für Heizung & Sanitär</p>
-                        </div>
+            <h2 class="text-2xl font-normal mb-6 text-google-gray dark:text-gray-300">Kontakt</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-google-darkCard border rounded-lg p-6 dark:border-gray-700">
+                    <h3 class="font-medium mb-4 text-google-blue">Öffnungszeiten</h3>
+                    <div class="text-sm space-y-2 text-gray-600 dark:text-gray-300">
+                        <div class="flex justify-between border-b pb-1 dark:border-gray-700"><span>Mo - Do</span><span>08:00 - 17:00</span></div>
+                        <div class="flex justify-between border-b pb-1 dark:border-gray-700"><span>Freitag</span><span>08:00 - 13:00</span></div>
+                        <div class="flex justify-between text-red-500"><span>Wochenende</span><span>Geschlossen</span></div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4 text-center">
-                        <a href="tel:+49123456789" class="p-6 bg-white dark:bg-google-darkCard rounded-2xl border dark:border-gray-700 hover:shadow-lg transition"><i class="fas fa-phone text-google-blue text-2xl mb-2"></i><p class="text-xs uppercase font-bold">Anrufen</p></a>
-                        <a href="mailto:info@kugelmann.de" class="p-6 bg-white dark:bg-google-darkCard rounded-2xl border dark:border-gray-700 hover:shadow-lg transition"><i class="fas fa-envelope text-google-blue text-2xl mb-2"></i><p class="text-xs uppercase font-bold">E-Mail</p></a>
+                    <div class="mt-6 pt-4 border-t dark:border-gray-700">
+                        <a href="tel:+49123456789" class="block py-2 text-google-blue hover:underline"><i class="fas fa-phone mr-2"></i> Anrufen</a>
+                        <a href="mailto:info@kugelmann.de" class="block py-2 text-google-blue hover:underline"><i class="fas fa-envelope mr-2"></i> E-Mail schreiben</a>
                     </div>
                 </div>
-                <div class="rounded-[2rem] overflow-hidden shadow-2xl border dark:border-gray-700 h-full min-h-[400px]">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d669.104977691628!2d8.380548392901845!3d50.19411818846408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bdaff3ffe50e85%3A0xe4f29c3ac45594d5!2sReinhold%20Kugelmann%20Heizung%26Sanit%C3%A4r%20Meisterbetrieb%20Inh.%20Axel%20Bachan!5e1!3m2!1sde!2sde!4v1744298678172!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <div class="h-64 rounded-lg overflow-hidden border dark:border-gray-700">
+                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d669.104977691628!2d8.380548392901845!3d50.19411818846408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bdaff3ffe50e85%3A0xe4f29c3ac45594d5!2sReinhold%20Kugelmann%20Heizung%26Sanit%C3%A4r%20Meisterbetrieb%20Inh.%20Axel%20Bachan!5e1!3m2!1sde!2sde!4v1744298678172!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </section>
 
-        <section id="impressum" class="nav-section">
-            <h2 class="text-3xl font-bold mb-8">Impressum</h2>
-            <div class="bg-white dark:bg-google-darkCard p-10 rounded-3xl border dark:border-gray-700 opacity-80 space-y-4">
+         <section id="impressum" class="nav-section">
+            <h2 class="text-2xl font-normal mb-6 text-google-gray dark:text-gray-300">Impressum</h2>
+            <div class="bg-white dark:bg-google-darkCard border rounded-lg p-6 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-300">
                 <p class="font-bold">Reinhold Kugelmann GmbH</p>
-                <p>Musterstraße 123<br>86672 Thierhaupten</p>
-                <p>Tel: +49 (0) 123 456789<br>E-Mail: info@reinhold-kugelmann.de</p>
-                <p class="pt-4 italic">Registergericht: Amtsgericht Augsburg<br>Geschäftsführer: Reinhold Kugelmann</p>
+                <p>Musterstraße 123, 86672 Thierhaupten</p>
+                <p class="mt-2">Tel: +49 (0) 123 456789</p>
             </div>
         </section>
 
         <section id="datenschutz" class="nav-section">
-            <h2 class="text-3xl font-bold mb-8">Datenschutz</h2>
-            <div class="bg-white dark:bg-google-darkCard p-10 rounded-3xl border dark:border-gray-700 opacity-80 text-sm space-y-4 max-h-[500px] overflow-y-auto">
-                <p>Ihre Daten sind bei uns sicher. Wir verwenden personenbezogene Daten nur zur Bearbeitung Ihrer Anfragen.</p>
-                <p>Detaillierte Informationen finden Sie in der vollständigen Datenschutzerklärung gemäß DSGVO...</p>
+            <h2 class="text-2xl font-normal mb-6 text-google-gray dark:text-gray-300">Datenschutz</h2>
+            <div class="bg-white dark:bg-google-darkCard border rounded-lg p-6 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-300">
+                <p>Ihre Daten sind sicher. Wir nutzen personenbezogene Daten nur zur Bearbeitung Ihrer Anfrage.</p>
             </div>
         </section>
 
     </main>
 
-    <footer class="py-10 border-t dark:border-gray-700 text-center opacity-40 text-sm">
-        <p>© 2026 Reinhold Kugelmann. Alle Rechte vorbehalten.</p>
-    </footer>
-
     <script>
-        // NAVIGATION
+        // Navigation Logic
         function navTo(id) {
             document.querySelectorAll('.nav-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -259,8 +240,7 @@
             if(h.classList.contains('dark')) { h.classList.remove('dark'); i.classList.replace('fa-sun','fa-moon'); }
             else { h.classList.add('dark'); i.classList.replace('fa-moon','fa-sun'); }
         }
-
-        // SLIDER LOGIC
+        // Slider Logic
         const slider = document.getElementById('bath-slider'), after = document.getElementById('bath-after'), handle = document.getElementById('bath-handle');
         let active = false;
         const slideMove = (e) => {
