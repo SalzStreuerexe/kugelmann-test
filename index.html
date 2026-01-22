@@ -17,11 +17,11 @@
                         google: {
                             blue: '#1a73e8',
                             blueHover: '#1557b0',
-                            darkBg: '#202124', // Google Dark Mode Background
-                            darkCard: '#303134', // Google Dark Mode Surface
+                            darkBg: '#202124',
+                            darkCard: '#303134',
                             lightBg: '#ffffff',
                             lightSurface: '#f8f9fa',
-                            textDark: '#e8eaed', // Google Dark Mode Text
+                            textDark: '#e8eaed',
                             textLight: '#202124',
                         }
                     }
@@ -39,7 +39,7 @@
         .page-transition { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Custom Scrollbar (optional, but nice) */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
@@ -56,9 +56,20 @@
             color: #8ab4f8;
         }
 
-        /* Hero Image Gradient Overlay for text readability */
+        /* Hero Image Gradient Overlay */
         .hero-overlay {
             background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+        }
+
+        /* --- VORHER-NACHHER SLIDER CSS --- */
+        .ba-slider { position: relative; width: 100%; height: 450px; overflow: hidden; border-radius: 16px; cursor: col-resize; }
+        .ba-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .ba-image img { width: 100%; height: 100%; object-fit: cover; }
+        .ba-after { width: 50%; border-right: 4px solid #1a73e8; z-index: 10; }
+        .ba-handle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 48px; height: 48px; background: #1a73e8; border: 4px solid white; border-radius: 50%; z-index: 20;
+            display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
     </style>
 </head>
@@ -66,7 +77,7 @@
 <body class="bg-google-lightSurface dark:bg-google-darkBg text-google-textLight dark:text-google-textDark transition-colors duration-300 h-screen flex flex-col md:flex-row overflow-hidden">
 
     <div class="md:hidden bg-white dark:bg-google-darkCard shadow-sm p-4 flex justify-between items-center z-50 sticky top-0">
-        <img src="images/LOGO+Titel%20ohne%20Hintergrund.png" alt="Kugelmann Logo" class="h-10 w-auto object-contain">
+        <img src="images/LOGO+Titel%20ohne%20Hintergrund.png" alt="Kugelmann Logo" class="h-14 w-auto object-contain">
         <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 focus:outline-none">
             <i class="fas fa-bars text-2xl"></i>
         </button>
@@ -75,8 +86,8 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:flex-shrink-0 w-72 bg-white dark:bg-google-darkCard border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 z-40 flex flex-col shadow-xl md:shadow-none">
         
         <div class="p-6 flex items-center justify-between">
-            <div class="w-full">
-                <img src="images/LOGO+Titel%20ohne%20Hintergrund.png" alt="Kugelmann Logo" class="w-full h-auto max-h-32 object-contain cursor-pointer" onclick="navTo('start')">
+            <div class="w-full flex justify-center md:justify-start">
+                <img src="images/LOGO+Titel%20ohne%20Hintergrund.png" alt="Kugelmann Logo" class="w-full h-auto max-h-48 object-contain cursor-pointer" onclick="navTo('start')">
             </div>
     
             <button onclick="toggleMobileMenu()" class="md:hidden text-gray-500">
@@ -259,50 +270,73 @@
                 </div>
             </div>
             
-            <div class="max-w-6xl mx-auto px-6 py-12">
-                <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
+            <div class="max-w-5xl mx-auto px-6 py-12">
+                <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-16 text-lg">
                     Qualität spricht für sich. Hier sehen Sie eine Auswahl unserer Projekte aus den Bereichen Neubau, Sanierung und Kundendienst.
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard">
-                        <div class="relative overflow-hidden h-56">
-                            <img src="images/vitodens.jpeg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="Projekt 1">
-                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-4 w-full">
-                                <span class="text-white text-xs font-bold uppercase tracking-wide bg-blue-600 px-2 py-1 rounded">Heizung</span>
+                <div class="flex flex-col space-y-16">
+                    
+                    <div class="group rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard border border-gray-100 dark:border-gray-700">
+                        <div class="grid grid-cols-1 md:grid-cols-2">
+                            <div class="relative overflow-hidden h-72 md:h-auto">
+                                <img src="images/vitodens.jpeg" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700" alt="Projekt 1">
+                                <div class="absolute top-4 left-4">
+                                    <span class="text-white text-xs font-bold uppercase tracking-wide bg-blue-600 px-3 py-1 rounded-full shadow-md">Heizung</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="p-6">
-                            <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Kesseltausch MFH</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">Austausch einer alten Ölheizung gegen moderne Gas-Brennwerttechnik von Viessmann inkl. hydraulischem Abgleich.</p>
+                            <div class="p-8 md:p-12 flex flex-col justify-center">
+                                <h4 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Kesseltausch MFH</h4>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                                    Austausch einer alten Ölheizung gegen moderne Gas-Brennwerttechnik von Viessmann. Durch den hydraulischen Abgleich und Hocheffizienzpumpen spart der Kunde nun ca. 20% Energiekosten.
+                                </p>
+                                <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                                    <li><i class="fas fa-check text-google-blue mr-2"></i> Viessmann Vitodens 300-W</li>
+                                    <li><i class="fas fa-check text-google-blue mr-2"></i> Neue Abgasanlage</li>
+                                    <li><i class="fas fa-check text-google-blue mr-2"></i> Smarte Steuerung per App</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard">
-                        <div class="relative overflow-hidden h-56">
-                            <img src="images/bad.jpeg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="Projekt 2">
-                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-4 w-full">
-                                <span class="text-white text-xs font-bold uppercase tracking-wide bg-teal-600 px-2 py-1 rounded">Bad</span>
+                    <div class="group rounded-3xl overflow-hidden shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard border border-gray-100 dark:border-gray-700">
+                        <div class="p-8 md:p-12 text-center bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+                            <span class="text-white text-xs font-bold uppercase tracking-wide bg-teal-600 px-3 py-1 rounded-full shadow-md mb-4 inline-block">Badsanierung</span>
+                            <h4 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Aus Alt mach Neu</h4>
+                            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
+                                Erleben Sie den Unterschied! Schieben Sie den Regler, um die Verwandlung vom alten 70er-Jahre Bad zur modernen Wohlfühloase zu sehen.
+                            </p>
+                            
+                            <div class="ba-slider shadow-xl mx-auto max-w-4xl" id="bath-slider">
+                                <div class="ba-image"><img src="images/bad_alt.jpg" alt="Altes Bad"></div>
+                                <div class="ba-image ba-after" id="bath-after"><img src="images/bad.jpeg" alt="Neues Bad"></div>
+                                <div class="ba-handle" id="bath-handle"><i class="fas fa-arrows-alt-h text-xl"></i></div>
                             </div>
-                        </div>
-                        <div class="p-6">
-                            <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Komplettbad Sanierung</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">Umbau zum barrierefreien Bad mit ebenerdiger Dusche, Großformatfliesen und hochwertigen Armaturen.</p>
+                            <p class="text-xs text-gray-400 mt-4 italic">Links: Vorher | Rechts: Nachher</p>
                         </div>
                     </div>
 
-                     <div class="group rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard">
-                        <div class="relative overflow-hidden h-56">
-                            <img src="images/referenz3.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="Projekt 3">
-                            <div class="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-4 w-full">
-                                <span class="text-white text-xs font-bold uppercase tracking-wide bg-orange-600 px-2 py-1 rounded">Wartung</span>
+                    <div class="group rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard border border-gray-100 dark:border-gray-700">
+                        <div class="grid grid-cols-1 md:grid-cols-2">
+                             <div class="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
+                                <h4 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Großanlage Wohnpark</h4>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                                    Für diesen Wohnkomplex übernehmen wir die komplette Wartung der Heizzentrale. Sicherheit und Hygiene stehen hier an erster Stelle.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-3 py-1 rounded-full">40 Wohneinheiten</span>
+                                    <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-3 py-1 rounded-full">Trinkwasserhygiene</span>
+                                </div>
+                            </div>
+                            <div class="relative overflow-hidden h-72 md:h-auto order-1 md:order-2">
+                                <img src="images/referenz3.jpg" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700" alt="Projekt 3">
+                                <div class="absolute top-4 right-4">
+                                    <span class="text-white text-xs font-bold uppercase tracking-wide bg-orange-600 px-3 py-1 rounded-full shadow-md">Wartung</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-6">
-                            <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Großanlage Wohnpark</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">Jährliche Wartung der Heizzentrale für 40 Wohneinheiten und Überprüfung der Trinkwasserhygiene.</p>
-                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -498,6 +532,37 @@
                 icon.classList.add('fa-sun');
             }
         }
+
+        // --- SLIDER LOGIC (WICHTIG FÜR DEN WOW-EFFEKT) ---
+        const slider = document.getElementById('bath-slider');
+        const afterImg = document.getElementById('bath-after');
+        const handle = document.getElementById('bath-handle');
+        let active = false;
+
+        const slideMove = (e) => {
+            if (!active) return;
+            // Support Touch and Mouse
+            let x = (e.pageX || (e.touches ? e.touches[0].pageX : 0));
+            // Calculate Position relative to container
+            let rect = slider.getBoundingClientRect();
+            // Calculate percentage (0 to 100)
+            let pos = ((x - rect.left) / rect.width) * 100;
+            // Clamp between 0 and 100
+            pos = Math.max(0, Math.min(100, pos));
+            
+            // Apply styles
+            afterImg.style.width = pos + "%";
+            handle.style.left = pos + "%";
+        };
+
+        // Events
+        slider.addEventListener('mousedown', () => active = true);
+        window.addEventListener('mouseup', () => active = false);
+        window.addEventListener('mousemove', slideMove);
+        
+        slider.addEventListener('touchstart', () => active = true);
+        window.addEventListener('touchend', () => active = false);
+        window.addEventListener('touchmove', slideMove);
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
