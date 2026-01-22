@@ -23,8 +23,7 @@
                             lightSurface: '#f8f9fa',
                             textDark: '#e8eaed',
                             textLight: '#202124',
-                            // RTX Green Color
-                            rtxGreen: '#76b900', 
+                            rtxGreen: '#76b900',
                         }
                     }
                 }
@@ -63,15 +62,17 @@
             background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
         }
 
-        /* --- RTX STYLE SLIDER CSS --- */
+        /* --- RTX STYLE SLIDER CSS (Optimiert für 16:9) --- */
         .ba-slider { 
             position: relative; 
             width: 100%; 
-            height: 700px; /* Hoch genug für Hochkant-Bilder */
+            /* Automatische Höhe basierend auf 16:9 Verhältnis */
+            height: 0; 
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             overflow: hidden; 
             border-radius: 12px; 
             cursor: col-resize; 
-            background-color: #111; /* Dunkler Hintergrund für besseren Kontrast */
+            background-color: #111; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -87,7 +88,7 @@
         .ba-image img { 
             width: 100%; 
             height: 100%; 
-            object-fit: contain; /* Zeigt das ganze Bild */
+            object-fit: cover; /* Füllt die Box komplett aus */
             display: block;
         }
 
@@ -96,10 +97,10 @@
             position: absolute; 
             top: 0; 
             left: 0; 
-            width: 50%; /* Startposition Mitte */
+            width: 50%; 
             height: 100%; 
             overflow: hidden; 
-            border-right: 3px solid #76b900; /* RTX Grün */
+            border-right: 3px solid #76b900; 
             z-index: 10; 
             will-change: width;
         }
@@ -107,7 +108,7 @@
         .ba-after img {
             max-width: none; 
             height: 100%;
-            object-fit: contain;
+            object-fit: cover; /* Füllt die Box komplett aus */
         }
 
         /* Der Griff im RTX Stil */
@@ -118,7 +119,7 @@
             transform: translate(-50%, -50%);
             width: 44px; 
             height: 44px; 
-            background: #76b900; /* RTX Grün */
+            background: #76b900; 
             border: 2px solid white; 
             border-radius: 50%;
             z-index: 20;
@@ -127,7 +128,7 @@
             justify-content: center; 
             color: white; 
             box-shadow: 0 0 15px rgba(118, 185, 0, 0.6);
-            pointer-events: none; /* Klicks gehen durch zum Slider */
+            pointer-events: none; 
         }
 
         /* RTX Label Styles */
@@ -136,7 +137,7 @@
             bottom: 20px;
             font-family: 'Roboto', sans-serif;
             font-weight: 900;
-            font-size: 1.5rem; /* Groß und Fett */
+            font-size: 1.5rem; 
             text-transform: uppercase;
             letter-spacing: 1px;
             z-index: 30;
@@ -149,13 +150,13 @@
 
         /* Status Farben */
         .label-active {
-            color: #76b900; /* Leuchtend Grün */
+            color: #76b900; 
             transform: scale(1.05);
             text-shadow: 0 0 10px rgba(118, 185, 0, 0.5);
         }
         
         .label-inactive {
-            color: rgba(255, 255, 255, 0.3); /* Ausgegraut */
+            color: rgba(255, 255, 255, 0.3); 
         }
     </style>
 </head>
