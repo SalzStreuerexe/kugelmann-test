@@ -61,11 +61,10 @@
             background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
         }
 
-        /* --- SLIDER CSS (Blau & Keine Markierung) --- */
+        /* --- SLIDER CSS --- */
         .ba-slider { 
             position: relative; 
             width: 100%; 
-            /* Automatische Höhe basierend auf 16:9 Verhältnis */
             height: 0; 
             padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             overflow: hidden; 
@@ -74,11 +73,9 @@
             background-color: #111; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             
-            /* VERHINDERT DAS BLAUE MARKIEREN BEIM KLICKEN */
+            /* Keine Markierung */
             user-select: none;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
         .ba-image { 
@@ -99,7 +96,6 @@
             pointer-events: none;
         }
 
-        /* Der Container für das "ALTE" Bild (Overlay) */
         .ba-after { 
             position: absolute; 
             top: 0; 
@@ -107,7 +103,7 @@
             width: 50%; 
             height: 100%; 
             overflow: hidden; 
-            border-right: 3px solid #1a73e8; /* BLAU */
+            border-right: 3px solid #1a73e8; 
             z-index: 10; 
             will-change: width;
         }
@@ -118,7 +114,6 @@
             object-fit: cover; 
         }
 
-        /* Der Griff */
         .ba-handle {
             position: absolute;
             top: 50%; 
@@ -126,7 +121,7 @@
             transform: translate(-50%, -50%);
             width: 44px; 
             height: 44px; 
-            background: #1a73e8; /* BLAU */
+            background: #1a73e8; 
             border: 2px solid white; 
             border-radius: 50%;
             z-index: 20;
@@ -134,7 +129,7 @@
             align-items: center; 
             justify-content: center; 
             color: white; 
-            box-shadow: 0 0 15px rgba(26, 115, 232, 0.6); /* BLAUER SCHATTEN */
+            box-shadow: 0 0 15px rgba(26, 115, 232, 0.6); 
             pointer-events: none; 
         }
 
@@ -144,48 +139,46 @@
             bottom: 20px;
             font-family: 'Roboto', sans-serif;
             font-weight: 900;
-            font-size: 1.5rem; 
+            font-size: 1.5rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             z-index: 30;
             transition: all 0.3s ease;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            pointer-events: none; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            pointer-events: none;
         }
 
         .label-left { left: 20px; }
         .label-right { right: 20px; }
 
-        /* Status Farben */
         .label-active {
-            color: #1a73e8; /* BLAU LEUCHTEND */
+            color: #1a73e8; 
             transform: scale(1.05);
-            text-shadow: 0 0 10px rgba(26, 115, 232, 0.5); /* BLAUES GLÜHEN */
+            text-shadow: 0 0 10px rgba(26, 115, 232, 0.8);
+            opacity: 1;
         }
         
         .label-inactive {
-            color: rgba(255, 255, 255, 0.3); 
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0.5;
         }
     </style>
 </head>
 
-<body class="bg-google-lightSurface dark:bg-google-darkBg text-google-textLight dark:text-google-textDark transition-colors duration-300 h-screen flex flex-col md:flex-row overflow-hidden">
+<body class="bg-google-lightSurface dark:bg-google-darkBg text-google-textLight dark:text-google-textDark transition-colors duration-300 h-[100dvh] flex flex-col md:flex-row overflow-hidden">
 
-    <div class="md:hidden bg-white dark:bg-google-darkCard shadow-sm p-4 flex justify-between items-center z-50 sticky top-0">
-        <img src="images/LOGO+Titel%20ohne%20Hintergrund.png" alt="Kugelmann Logo" class="h-14 w-auto object-contain">
-        <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 focus:outline-none">
-            <i class="fas fa-bars text-2xl"></i>
-        </button>
-    </div>
+    <button onclick="toggleMobileMenu()" class="md:hidden fixed top-4 right-4 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-3 rounded-full shadow-lg text-gray-600 dark:text-gray-300 hover:text-google-blue transition border border-gray-100 dark:border-gray-700">
+        <i class="fas fa-bars text-xl w-6 h-6 flex items-center justify-center"></i>
+    </button>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:flex-shrink-0 w-72 bg-white dark:bg-google-darkCard border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 z-40 flex flex-col shadow-xl md:shadow-none">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:static md:flex-shrink-0 w-72 bg-white dark:bg-google-darkCard border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 z-[60] flex flex-col shadow-xl md:shadow-none">
         
         <div class="p-6 flex items-center justify-between">
             <div class="w-full flex justify-center md:justify-start">
                 <img src="images/LOGO+Titel%20ohne%20Hintergrund.png" alt="Kugelmann Logo" class="w-full h-auto max-h-48 object-contain cursor-pointer" onclick="navTo('start')">
             </div>
     
-            <button onclick="toggleMobileMenu()" class="md:hidden text-gray-500">
+            <button onclick="toggleMobileMenu()" class="md:hidden text-gray-500 hover:text-red-500 transition">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
@@ -235,7 +228,7 @@
         </div>
     </aside>
 
-    <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden glass-panel"></div>
+    <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-[55] hidden md:hidden glass-panel"></div>
 
     <main id="main-scroll-container" class="flex-1 overflow-y-auto relative bg-white dark:bg-google-darkBg">
         
@@ -258,7 +251,7 @@
                 </div>
             </div>
 
-            <div class="max-w-6xl mx-auto px-6 -mt-16 relative z-10 pb-20">
+            <div class="max-w-6xl mx-auto px-6 -mt-16 relative z-10 pb-32">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white dark:bg-google-darkCard rounded-2xl shadow-lg p-6 hover:shadow-xl transition duration-300 border border-gray-100 dark:border-gray-700">
                         <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-google-blue mb-4">
@@ -316,7 +309,7 @@
                 </div>
             </div>
 
-            <div class="max-w-5xl mx-auto px-6 py-12 space-y-12">
+            <div class="max-w-5xl mx-auto px-6 py-12 space-y-12 pb-32">
                 <div class="flex flex-col md:flex-row gap-8 items-center">
                     <div class="md:w-1/2">
                          <div class="uppercase text-google-blue font-bold text-sm mb-2 tracking-wider">Wärme</div>
@@ -386,7 +379,7 @@
                 </div>
             </div>
             
-            <div class="max-w-5xl mx-auto px-6 py-12">
+            <div class="max-w-5xl mx-auto px-6 py-12 pb-32">
                 <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-16 text-lg">
                     Qualität spricht für sich. Hier sehen Sie eine Auswahl unserer Projekte aus den Bereichen Neubau, Sanierung und Kundendienst.
                 </p>
@@ -438,13 +431,14 @@
                                     <i class="fas fa-chevron-right text-[10px] ml-1"></i>
                                 </div>
 
-                                <span id="label-old" class="rtx-label label-left label-inactive">Altes Bad</span>
-                                <span id="label-new" class="rtx-label label-right label-inactive">Neues Bad</span>
+                                <span id="label-old" class="rtx-label label-left label-inactive hidden md:block">Altes Bad</span>
+                                <span id="label-new" class="rtx-label label-right label-inactive hidden md:block">Neues Bad</span>
 
                             </div>
                             <p class="text-xs text-gray-400 mt-4 italic">Bewegen Sie den Slider für den Vorher-Nachher Vergleich</p>
                         </div>
                     </div>
+
                     <div class="group rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 bg-white dark:bg-google-darkCard border border-gray-100 dark:border-gray-700">
                         <div class="grid grid-cols-1 md:grid-cols-2">
                              <div class="p-8 md:p-12 flex flex-col justify-center order-2 md:order-1">
@@ -478,7 +472,7 @@
                 </div>
             </div>
             
-            <div class="max-w-4xl mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto px-6 py-12 pb-32">
                  <div class="bg-white dark:bg-google-darkCard p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
                     <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Tradition trifft Moderne</h3>
                     <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
@@ -511,7 +505,7 @@
         </div>
 
         <div id="page-kontakt" class="page-section hidden">
-            <div class="max-w-5xl mx-auto px-6 py-12">
+            <div class="max-w-5xl mx-auto px-6 py-12 pb-32">
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8 text-center">Kontaktieren Sie uns</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -580,7 +574,7 @@
         </div>
 
         <div id="page-impressum" class="page-section hidden">
-            <div class="max-w-4xl mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto px-6 py-12 pb-32">
                 <div class="bg-white dark:bg-google-darkCard p-8 md:p-12 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Impressum</h2>
                     <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400">
