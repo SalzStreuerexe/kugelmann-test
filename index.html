@@ -72,8 +72,6 @@
             cursor: col-resize; 
             background-color: #111; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            
-            /* Keine Markierung */
             user-select: none;
             -webkit-user-select: none;
         }
@@ -233,10 +231,14 @@
     <main id="main-scroll-container" class="flex-1 overflow-y-auto relative bg-white dark:bg-google-darkBg">
         
         <div id="page-start" class="page-section">
-            <div class="relative h-[500px] w-full bg-gray-900 overflow-hidden">
+            <div class="relative h-[600px] md:h-[750px] w-full bg-gray-900 overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover opacity-80" alt="Modernes Wohnen">
-                <div class="absolute inset-0 hero-overlay flex items-center justify-center text-center px-4">
+                
+                <div class="absolute inset-0 hero-overlay flex flex-col items-center text-center px-4 justify-start pt-28 md:justify-center md:pt-0">
                     <div class="max-w-3xl">
+                        
+                        <img src="images/Firma Schrift LOGO.png" alt="Reinhold Kugelmann Schriftzug" class="mx-auto h-32 md:h-56 w-auto mb-4 md:mb-8 object-contain drop-shadow-2xl filter brightness-110">
+                        
                         <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-md">Wärme, Wasser, Wohlfühlen.</h2>
                         <p class="text-lg md:text-xl text-gray-100 mb-8 font-light">Ihr Meisterbetrieb für moderne Heiztechnik und Traumbäder in der Region.</p>
                         <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -251,7 +253,7 @@
                 </div>
             </div>
 
-            <div class="max-w-6xl mx-auto px-6 -mt-16 relative z-10 pb-32">
+            <div class="max-w-6xl mx-auto px-6 mt-12 relative z-10 pb-32">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white dark:bg-google-darkCard rounded-2xl shadow-lg p-6 hover:shadow-xl transition duration-300 border border-gray-100 dark:border-gray-700">
                         <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-google-blue mb-4">
